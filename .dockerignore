@@ -1,0 +1,10 @@
+**/.git
+**/bin
+**/obj
+**/node_modules
+**/.vs
+**/.vscode
+**/.env
+src/frontend
+Dockerfile
+README.md

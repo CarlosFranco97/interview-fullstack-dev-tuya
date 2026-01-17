@@ -11,8 +11,8 @@ COPY src/backend/Modules/Card/Card.csproj ./src/backend/Modules/Card/
 COPY src/backend/Modules/User/User.csproj ./src/backend/Modules/User/
 COPY src/backend/Modules/Payment/Payment.csproj ./src/backend/Modules/Payment/
 
-# Restore dependencies
-RUN dotnet restore src/backend/CardManagement.sln
+# Restore dependencies targeting the API project specifically
+RUN dotnet restore src/backend/CardManagement.Api/CardManagement.Api.csproj
 
 # Copy the rest of the source code
 COPY src/backend/ ./src/backend/
