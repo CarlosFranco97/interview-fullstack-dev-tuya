@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'Helvetica Neue LT Std';
+    src: url('ruta/a/tu/HelveticaNeueLTStd-Roman.woff2') format('woff2'),
+        url('ruta/a/tu/HelveticaNeueLTStd-Roman.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Helvetica Neue LT Std', "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
