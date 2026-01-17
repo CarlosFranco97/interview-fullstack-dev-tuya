@@ -22,7 +22,7 @@ public class Card
     private decimal _balance;
     public Money Balance 
     { 
-        get => Money.Create(_balance, "COP");
+        get => Money.Create(Math.Max(0, _balance), "COP");
         private set => _balance = value.Amount;
     }
 
@@ -125,6 +125,10 @@ public class Card
             throw new DomainException("El límite de crédito no puede exceder $300,000 COP");
         
         var usedCredit = GetUsedCredit();
+        
+        if (newLimit.Amount < usedCredit.Amount)
+            throw new DomainException($"El nuevo límite ({newLimit.Amount:N0} COP) no puede ser menor al crédito utilizado ({usedCredit.Amount:N0} COP)");
+        
         _creditLimit = newLimit.Amount;
         _balance = newLimit.Amount - usedCredit.Amount;
     }

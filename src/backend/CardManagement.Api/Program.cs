@@ -99,6 +99,20 @@ builder.Services.AddValidatorsFromAssemblyContaining<ProcessPaymentCommandValida
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    
+    if (dbContext.Database.IsSqlite() && dbContext.Database.GetConnectionString()?.Contains(":memory:") == true)
+    {
+        dbContext.Database.EnsureCreated();
+    }
+    else
+    {
+        dbContext.Database.Migrate();
+    }
+}
+
 app.UseGlobalExceptionMiddleware();
 
 app.UseCors("AllowFrontend");
