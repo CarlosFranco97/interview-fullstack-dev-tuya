@@ -6,5 +6,5 @@ using User.Application.Commands;
 public interface IAuthService
 {
     Task<LoginResponse> LoginAsync(LoginCommand command);
-    Task<UserDto> RegisterAsync(RegisterCommand command);
+    Task<LoginResponse> RegisterAsync(RegisterCommand command);
 }

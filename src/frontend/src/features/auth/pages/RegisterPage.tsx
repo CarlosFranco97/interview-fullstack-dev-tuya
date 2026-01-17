@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthLayout } from '../layout/AuthLayout';
 import { Button, Input, SideModal, ErrorIcon } from '@/components/common';
@@ -8,19 +7,7 @@ import * as authApi from '../api/authApi';
 import { useState } from 'react';
 import { ROUTES } from '@/constants';
 import type { ApiError } from '@/types/apiTypes';
-
-const registerSchema = z.object({
-    fullName: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
-    username: z.string().min(3, 'El usuario debe tener al menos 3 caracteres'),
-    email: z.string().email('Correo electrónico inválido'),
-    password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
-    confirmPassword: z.string().min(6, 'Confirma tu contraseña'),
-}).refine((data) => data.password === data.confirmPassword, {
-    message: "Las contraseñas no coinciden",
-    path: ["confirmPassword"],
-});
-
-type RegisterFilters = z.infer<typeof registerSchema>;
+import { registerSchema, type RegisterForm } from '../schemas/authSchema';
 
 export const RegisterPage = () => {
     const navigate = useNavigate();
@@ -30,11 +17,11 @@ export const RegisterPage = () => {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-    } = useForm<RegisterFilters>({
+    } = useForm<RegisterForm>({
         resolver: zodResolver(registerSchema),
     });
 
-    const onSubmit = async (data: RegisterFilters) => {
+    const onSubmit = async (data: RegisterForm) => {
         try {
             setError(null);
             await authApi.register(data.username, data.email, data.password, data.fullName);

@@ -35,7 +35,7 @@ public class AuthService : IAuthService
         _mapper = mapper;
     }
 
-    public async Task<Shared.Facades.UserDto> RegisterAsync(RegisterCommand command)
+    public async Task<Shared.Facades.LoginResponse> RegisterAsync(RegisterCommand command)
     {
         await _registerValidator.ValidateAndThrowAsync(command);
 
@@ -58,7 +58,13 @@ public class AuthService : IAuthService
 
         await _userRepository.AddAsync(user);
 
-        return _mapper.Map<Shared.Facades.UserDto>(user);
+        var token = GenerateJwtToken(user);
+
+        return new Shared.Facades.LoginResponse
+        {
+            Token = token,
+            User = _mapper.Map<Shared.Facades.UserDto>(user)
+        };
     }
 
     public async Task<Shared.Facades.LoginResponse> LoginAsync(LoginCommand command)

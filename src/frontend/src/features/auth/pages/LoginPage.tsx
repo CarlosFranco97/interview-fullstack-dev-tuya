@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthLayout } from '../layout/AuthLayout';
 import { Button, Input, SideModal, ErrorIcon } from '@/components/common';
@@ -8,13 +7,7 @@ import * as authApi from '../api/authApi';
 import { useState } from 'react';
 import { ROUTES } from '@/constants';
 import type { ApiError } from '@/types/apiTypes';
-
-const loginSchema = z.object({
-    username: z.string().min(1, 'El usuario es requerido'),
-    password: z.string().min(1, 'La contraseña es requerida'),
-});
-
-type LoginFilters = z.infer<typeof loginSchema>;
+import { loginSchema, type LoginForm } from '../schemas/authSchema';
 
 export const LoginPage = () => {
     const navigate = useNavigate();
@@ -24,11 +17,11 @@ export const LoginPage = () => {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-    } = useForm<LoginFilters>({
+    } = useForm<LoginForm>({
         resolver: zodResolver(loginSchema),
     });
 
-    const onSubmit = async (data: LoginFilters) => {
+    const onSubmit = async (data: LoginForm) => {
         try {
             setError(null);
             await authApi.login(data.username, data.password);
