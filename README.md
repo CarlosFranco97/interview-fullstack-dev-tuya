@@ -1,76 +1,58 @@
-# Prueba Técnica - Fullstack Developer
+# Sistema de Gestión de Tarjetas de Crédito
 
-Este repositorio contiene la solución para la prueba técnica de gestión de tarjetas de crédito y pagos. El proyecto está dividido en un backend desarrollado en .NET 8 y un frontend desarrollado en React + Vite.
+Aplicación fullstack para la gestión de tarjetas de crédito y procesamiento de pagos.
 
 ![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet) ![C#](https://img.shields.io/badge/C%23-12.0-239120?logo=csharp) ![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react) ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?logo=typescript) ![SQLite](https://img.shields.io/badge/SQLite-3-003B57?logo=sqlite)
 
-## Requisitos Previos
+## Inicio Rápido
 
+### Requisitos
 - .NET SDK 8.0 o superior
-- Node.js (v18 o superior)
-- npm o yarn
+- Node.js v18 o superior
 
-## Estructura del Proyecto
+### Ejecución
 
-- `src/backend`: API REST desarrollada con Arquitectura Hexagonal y Domain-Driven Design (DDD).
-- `src/frontend`: Aplicación SPA desarrollada con React, TypeScript y Tailwind CSS.
-
-## Instrucciones de Configuración Local
-
-### 1. Configuración del Backend
-
-Desde la carpeta raíz del proyecto:
-
+**Backend** (en una terminal):
 ```bash
 cd src/backend
-```
-
-**Base de Datos (SQLite):**
-La aplicación está configurada para inicializar la base de datos y crear todas las tablas necesarias automáticamente en el primer arranque. No es necesario ejecutar migraciones manuales.
-
-**Ejecución:**
-
-```bash
 dotnet run --project CardManagement.Api
 ```
+ API disponible en `http://localhost:5269`  
+ Documentación Swagger en `http://localhost:5269/swagger`
 
-La API estará disponible por defecto en `http://localhost:5269`. Puedes acceder a la documentación Swagger en `http://localhost:5269/swagger`.
-
-### 2. Configuración del Frontend
-
-Desde la carpeta raíz del proyecto:
-
+**Frontend** (en otra terminal):
 ```bash
 cd src/frontend
-```
-
-**Instalación de dependencias:**
-
-```bash
 npm install
-```
-
-**Variables de Entorno:**
-Asegúrate de tener un archivo `.env` en `src/frontend/` (puedes copiar el `.env.example` si existe o crearlo):
-
-```env
-VITE_API_URL=http://localhost:5269/api
-```
-
-**Ejecución:**
-
-```bash
 npm run dev
 ```
+Aplicación disponible en `http://localhost:5173`
 
-La aplicación estará disponible en `http://localhost:5173`.
+---
 
-## Funcionalidades Implementadas
+##  Estructura
 
-- Registro e inicio de sesión seguro con JWT.
-- Gestión de tarjetas de crédito (crear, editar, eliminar).
-- Validación de negocio: máximo 3 tarjetas por usuario.
-- Procesamiento de pagos con verificación de cupo disponible.
-- Prevención de ajuste de cupo inferior a la deuda actual.
-- Interfaz moderna con animaciones y componentes personalizados.
-- Encriptación AES-256 para datos sensibles.
+- `src/backend`: API REST con Arquitectura Hexagonal y DDD
+- `src/frontend`: SPA con React, TypeScript y Tailwind CSS
+
+##  Características
+
+- **Autenticación JWT**: Registro y login seguros
+- **Gestión de Tarjetas**: CRUD completo con validaciones (máx. 3 por usuario, Luhn, BIN 4532)
+- **Procesamiento de Pagos**: Verificación de cupo disponible en tiempo real
+- **Seguridad**: Encriptación AES-256 para datos sensibles
+- **Interfaz Moderna**: Diseño responsive con animaciones y glassmorphism
+
+## Tecnologías
+
+**Backend**: .NET 8, Entity Framework Core, SQLite, JWT, BCrypt, FluentValidation  
+**Frontend**: React 18, TypeScript, Vite, Tailwind CSS, Zustand, React Hook Form, Zod
+
+##  Documentación Detallada
+
+- [Backend README](src/backend/README.md) - Arquitectura y patrones de diseño
+- [Frontend README](src/frontend/README.md) - Estructura de features y componentes
+
+---
+
+**Nota**: La base de datos SQLite se crea automáticamente en el primer arranque con todas las migraciones aplicadas.
