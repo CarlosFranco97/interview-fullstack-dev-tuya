@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthLayout } from '../layout/AuthLayout';
-import { Button, Input } from '@/components/common';
+import { Button, Input, SideModal, ErrorIcon } from '@/components/common';
 import * as authApi from '../api/authApi';
 import { useState } from 'react';
 import { ROUTES } from '@/constants';
@@ -41,8 +41,7 @@ export const RegisterPage = () => {
             navigate(ROUTES.DASHBOARD);
         } catch (err) {
             const error = err as ApiError;
-            setError(error.message || 'Error al registrar usuario');
-        } finally {
+            setError(error.message || 'Error al registrar usuario. Por favor verifique los datos.');
         }
     };
 
@@ -52,12 +51,6 @@ export const RegisterPage = () => {
             subtitle="Únete a la banca digital más segura y confiable"
         >
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                {error && (
-                    <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm border border-red-100">
-                        {error}
-                    </div>
-                )}
-
                 <Input
                     label="Nombre completo"
                     placeholder="Juan Pérez"
@@ -113,6 +106,17 @@ export const RegisterPage = () => {
                     </p>
                 </div>
             </form>
+
+            <SideModal
+                isOpen={!!error}
+                onClose={() => setError(null)}
+                title="Error de registro"
+                type="error"
+                icon={<ErrorIcon className="w-8 h-8 text-red-500" />}
+                description={error || ''}
+            >
+                <p>No pudimos crear su cuenta en este momento. Verifique que el usuario o correo electrónico no estén ya en uso y que los datos ingresados sean correctos.</p>
+            </SideModal>
         </AuthLayout>
     );
 };

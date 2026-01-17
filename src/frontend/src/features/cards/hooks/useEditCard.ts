@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as cardsApi from '../api/cardsApi';
@@ -7,9 +7,6 @@ import { editCardSchema, type EditCardForm } from '../schemas/cardSchema';
 import { ROUTES } from '@/constants';
 import type { Card } from '../types/cardTypes';
 import type { ApiError } from '@/types/apiTypes';
-
-// Temporarily defining editCardSchema here if it wasn't in cardSchema.ts
-// Re-check cardSchema.ts: I used updateCardSchema there. Let's align.
 
 /**
  * Custom hook to manage editing an existing card.
@@ -25,6 +22,10 @@ export const useEditCard = () => {
         resolver: zodResolver(editCardSchema) as any,
     });
 
+    const watchedLimit = useWatch({
+        control: form.control,
+        name: 'creditLimit'
+    });
 
     useEffect(() => {
         const loadCard = async () => {
@@ -62,12 +63,17 @@ export const useEditCard = () => {
         }
     };
 
+    const currentDebt = card ? card.creditLimit - (card.balance || 0) : 0;
+    const isLimitTooLow = Number(watchedLimit || 0) < currentDebt;
+
     return {
         card,
         form,
         isLoading,
         serverError,
         onSubmit: form.handleSubmit(onSubmit),
-        navigate
+        navigate,
+        isLimitTooLow,
+        currentDebt
     };
 };

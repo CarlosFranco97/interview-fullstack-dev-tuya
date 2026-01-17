@@ -1,4 +1,3 @@
-import { useWatch } from 'react-hook-form';
 import { Button, Input, Loading } from '@/components/common';
 import { ROUTES } from '@/constants';
 import { formatCurrency } from '@/utils/formatters';
@@ -15,16 +14,18 @@ export const EditCardPage = () => {
         isLoading,
         serverError,
         onSubmit,
-        navigate
+        navigate,
+        isLimitTooLow,
+        currentDebt
     } = useEditCard();
 
     const {
         register,
-        control,
         formState: { errors, isSubmitting },
+        watch
     } = form;
 
-    const watchedValues = useWatch({ control });
+    const watchedValues = watch();
 
     if (isLoading) {
         return (
@@ -41,6 +42,10 @@ export const EditCardPage = () => {
             </div>
         );
     }
+
+    const limitErrorMessage = isLimitTooLow
+        ? `El cupo no puede ser menor a la deuda actual (${formatCurrency(currentDebt)})`
+        : errors.creditLimit?.message;
 
     return (
         <div className="flex flex-col lg:flex-row gap-8 h-[calc(100vh-140px)]">
@@ -60,6 +65,7 @@ export const EditCardPage = () => {
                     <Input
                         label="Nombre del titular"
                         placeholder="NOMBRE APELLIDO"
+                        maxLength={20}
                         error={errors.holderName?.message}
                         {...register('holderName')}
                     />
@@ -69,7 +75,12 @@ export const EditCardPage = () => {
                             label="Cupo total"
                             type="number"
                             placeholder="1000000"
-                            error={errors.creditLimit?.message}
+                            onInput={(e) => {
+                                if (e.currentTarget.value.length > 6) {
+                                    e.currentTarget.value = e.currentTarget.value.slice(0, 6);
+                                }
+                            }}
+                            error={limitErrorMessage}
                             {...register('creditLimit')}
                         />
                     </div>
@@ -87,6 +98,7 @@ export const EditCardPage = () => {
                             type="submit"
                             className="flex-1 bg-red-600 hover:bg-red-700 text-white"
                             isLoading={isSubmitting}
+                            disabled={isLimitTooLow}
                         >
                             Guardar cambios
                         </Button>

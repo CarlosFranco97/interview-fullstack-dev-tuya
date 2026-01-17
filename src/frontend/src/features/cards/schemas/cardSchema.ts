@@ -25,7 +25,7 @@ export const editCardSchema = z.object({
         .optional(),
     creditLimit: z.coerce.number()
         .min(0, 'El cupo debe ser positivo')
-        .max(30000000, 'El cupo es muy alto')
+        .max(300000, 'El cupo debe ser menor a 300,000')
         .optional(),
 });
 

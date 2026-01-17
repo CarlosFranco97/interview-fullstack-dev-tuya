@@ -47,12 +47,10 @@ describe('useCards hook', () => {
         expect(result.current.cards).toEqual([]);
     });
 
-    it('should handle card deletion confirmed', async () => {
+    it('should delete card and refresh list', async () => {
         const mockCards = [{ id: '1', cardNumber: '1234' }];
         (cardsApi.getCards as any).mockResolvedValue(mockCards);
         (cardsApi.deleteCard as any).mockResolvedValue(undefined);
-
-        const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
 
         const { result } = renderHook(() => useCards());
 
@@ -63,28 +61,7 @@ describe('useCards hook', () => {
             success = await result.current.deleteCard('1');
         });
 
-        expect(confirmSpy).toHaveBeenCalled();
         expect(cardsApi.deleteCard).toHaveBeenCalledWith('1');
         expect(success).toBe(true);
-        expect(cardsApi.getCards).toHaveBeenCalledTimes(2);
-
-        confirmSpy.mockRestore();
-    });
-
-    it('should not delete if user cancels', async () => {
-        const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
-
-        const { result } = renderHook(() => useCards());
-
-        let success;
-        await act(async () => {
-            success = await result.current.deleteCard('1');
-        });
-
-        expect(confirmSpy).toHaveBeenCalled();
-        expect(cardsApi.deleteCard).not.toHaveBeenCalled();
-        expect(success).toBe(false);
-
-        confirmSpy.mockRestore();
     });
 });

@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthLayout } from '../layout/AuthLayout';
-import { Button, Input } from '@/components/common';
+import { Button, Input, SideModal, ErrorIcon } from '@/components/common';
 import * as authApi from '../api/authApi';
 import { useState } from 'react';
 import { ROUTES } from '@/constants';
@@ -35,7 +35,7 @@ export const LoginPage = () => {
             navigate(ROUTES.DASHBOARD);
         } catch (err) {
             const error = err as ApiError;
-            setError(error.message || 'Credenciales inválidas');
+            setError(error.message || 'Credenciales inválidas. Por favor verifique sus datos.');
         }
     };
 
@@ -45,15 +45,6 @@ export const LoginPage = () => {
             subtitle="Ingresa tus credenciales para acceder a tu banca en línea"
         >
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                {error && (
-                    <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm border border-red-100 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                            <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
-                        </svg>
-                        {error}
-                    </div>
-                )}
-
                 <div className="space-y-4">
                     <Input
                         label="Usuario"
@@ -96,6 +87,17 @@ export const LoginPage = () => {
                     </p>
                 </div>
             </form>
+
+            <SideModal
+                isOpen={!!error}
+                onClose={() => setError(null)}
+                title="Error de acceso"
+                type="error"
+                icon={<ErrorIcon className="w-8 h-8 text-red-500" />}
+                description={error || ''}
+            >
+                <p>Asegúrese de que su usuario y contraseña sean correctos. Si el problema persiste, intente restablecer su contraseña.</p>
+            </SideModal>
         </AuthLayout>
     );
 };

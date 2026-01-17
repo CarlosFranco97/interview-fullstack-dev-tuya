@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Loading } from '@/components/common';
+import { Button, Loading, SideModal, ErrorIcon } from '@/components/common';
 import { ROUTES } from '@/constants';
 import { formatCurrency } from '@/utils/formatters';
 import { useCards } from '../hooks/useCards';
@@ -10,7 +11,26 @@ import { useCards } from '../hooks/useCards';
  */
 export const CardsPage = () => {
     const navigate = useNavigate();
-    const { cards, isLoading, error, deleteCard } = useCards();
+    const { cards, isLoading, error, deleteCard, fetchCards } = useCards();
+
+    // State for deletion
+    const [cardIdToDelete, setCardIdToDelete] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleDeleteClick = (id: string) => {
+        setCardIdToDelete(id);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!cardIdToDelete) return;
+        setIsDeleting(true);
+        const success = await deleteCard(cardIdToDelete);
+        setIsDeleting(false);
+        if (success) {
+            setCardIdToDelete(null);
+            await fetchCards();
+        }
+    };
 
     if (isLoading) {
         return (
@@ -101,7 +121,7 @@ export const CardsPage = () => {
                                 Editar
                             </Button>
                             <Button
-                                onClick={() => card.id && deleteCard(card.id)}
+                                onClick={() => card.id && handleDeleteClick(card.id)}
                                 className="flex-1 bg-red-500 border border-red-200 text-white hover:bg-red-100 text-sm py-2"
                             >
                                 Eliminar
@@ -110,6 +130,21 @@ export const CardsPage = () => {
                     </div>
                 ))}
             </div>
+
+            <SideModal
+                isOpen={!!cardIdToDelete}
+                onClose={() => setCardIdToDelete(null)}
+                title="¿Eliminar tarjeta?"
+                description="¿Estás seguro de que deseas eliminar esta tarjeta?"
+                type="danger"
+                icon={<ErrorIcon className="w-8 h-8 text-red-500" />}
+                onConfirm={handleConfirmDelete}
+                isLoading={isDeleting}
+                confirmText="Sí, eliminar"
+                cancelText="No, mantener"
+            >
+                <p>Esta acción es permanente y no podrá recuperar el acceso a esta tarjeta una vez eliminada. Asegúrese de liquidar cualquier saldo pendiente.</p>
+            </SideModal>
         </div>
     );
 };

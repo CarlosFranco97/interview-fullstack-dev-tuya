@@ -28,13 +28,8 @@ export const useCards = () => {
     }, []);
 
     const deleteCard = async (id: string) => {
-        if (!window.confirm('¿Estás seguro de que deseas eliminar esta tarjeta? Esta acción no se puede deshacer.')) {
-            return false;
-        }
-
         try {
             await cardsApi.deleteCard(id);
-            await fetchCards();
             return true;
         } catch (err) {
             const error = err as ApiError;
