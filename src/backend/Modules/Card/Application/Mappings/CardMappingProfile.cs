@@ -18,6 +18,16 @@ public class CardMappingProfile : Profile
             .ForMember(dest => dest.Status, 
                 opt => opt.MapFrom(src => src.Status.ToString()));
 
+        CreateMap<Card, CardDetailDto>()
+            .ForMember(dest => dest.CardNumber, 
+                opt => opt.MapFrom(src => src.CardNumber.Masked()))
+            .ForMember(dest => dest.Balance, 
+                opt => opt.MapFrom(src => src.Balance.Amount))
+            .ForMember(dest => dest.CreditLimit, 
+                opt => opt.MapFrom(src => src.CreditLimit.Amount))
+            .ForMember(dest => dest.Status, 
+                opt => opt.MapFrom(src => src.Status.ToString()));
+
         CreateMap<CardNumber, string>()
             .ConvertUsing(src => src.Value);
         

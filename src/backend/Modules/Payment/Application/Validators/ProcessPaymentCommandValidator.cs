@@ -8,14 +8,9 @@ public class ProcessPaymentCommandValidator : AbstractValidator<ProcessPaymentCo
     public ProcessPaymentCommandValidator()
     {
         RuleFor(x => x.CardId)
-            .NotEmpty().WithMessage("CardId is required");
-            
+            .NotEmpty().WithMessage("El ID de la tarjeta es requerido");
+
         RuleFor(x => x.Amount)
-            .GreaterThan(0).WithMessage("Amount must be positive")
-            .LessThanOrEqualTo(10000).WithMessage("Amount cannot exceed $10,000");
-            
-        RuleFor(x => x.Description)
-            .NotEmpty().WithMessage("Description is required")
-            .MaximumLength(200).WithMessage("Description too long");
+            .GreaterThan(0).WithMessage("El monto debe ser positivo");
     }
 }

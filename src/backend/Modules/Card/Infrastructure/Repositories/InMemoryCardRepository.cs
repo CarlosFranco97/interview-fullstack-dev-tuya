@@ -24,6 +24,12 @@ public class InMemoryCardRepository : ICardRepository
         return Task.FromResult<IEnumerable<CardEntity>>(_cards);
     }
 
+    public Task<IEnumerable<CardEntity>> GetCardsByUserIdAsync(Guid userId)
+    {
+        var cards = _cards.Where(c => c.UserId == userId).ToList();
+        return Task.FromResult<IEnumerable<CardEntity>>(cards);
+    }
+
     public Task AddAsync(CardEntity card)
     {
         _cards.Add(card);
@@ -37,6 +43,16 @@ public class InMemoryCardRepository : ICardRepository
         {
             _cards.Remove(existingCard);
             _cards.Add(card);
+        }
+        return Task.CompletedTask;
+    }
+
+    public Task DeleteAsync(Guid id)
+    {
+        var card = _cards.FirstOrDefault(c => c.Id == id);
+        if (card != null)
+        {
+            _cards.Remove(card);
         }
         return Task.CompletedTask;
     }

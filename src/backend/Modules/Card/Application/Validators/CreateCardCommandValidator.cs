@@ -8,23 +8,15 @@ public class CreateCardCommandValidator : AbstractValidator<CreateCardCommand>
     public CreateCardCommandValidator()
     {
         RuleFor(x => x.UserId)
-            .NotEmpty().WithMessage("User ID is required");
-
-        RuleFor(x => x.CardNumber)
-            .NotEmpty().WithMessage("Card number is required")
-            .Length(16).WithMessage("Card number must be 16 digits")
-            .Matches(@"^\d+$").WithMessage("Card number must contain only digits");
+            .NotEmpty().WithMessage("El ID de usuario es requerido");
 
         RuleFor(x => x.HolderName)
-            .NotEmpty().WithMessage("Holder name is required")
-            .MinimumLength(3).WithMessage("Holder name must be at least 3 characters")
-            .MaximumLength(100).WithMessage("Holder name cannot exceed 100 characters");
-
-        RuleFor(x => x.ExpirationDate)
-            .GreaterThan(DateTime.UtcNow).WithMessage("Expiration date must be in the future");
+            .NotEmpty().WithMessage("El nombre del titular es requerido")
+            .MinimumLength(3).WithMessage("El nombre del titular debe tener al menos 3 caracteres")
+            .MaximumLength(100).WithMessage("El nombre del titular no puede exceder 100 caracteres");
 
         RuleFor(x => x.CreditLimit)
-            .GreaterThan(0).WithMessage("Credit limit must be positive")
-            .LessThanOrEqualTo(100000).WithMessage("Credit limit cannot exceed $100,000");
+            .GreaterThan(0).WithMessage("El cupo de crédito debe ser positivo")
+            .LessThanOrEqualTo(300000).WithMessage("El cupo de crédito no puede exceder $300,000 COP");
     }
 }

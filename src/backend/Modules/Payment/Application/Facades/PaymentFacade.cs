@@ -16,7 +16,6 @@ public class PaymentFacade : IPaymentFacade
         _mapper = mapper;
     }
 
-    // Método que otros módulos pueden llamar
     public async Task<decimal> GetTotalPaymentsByUserAsync(Guid userId)
     {
         var payments = await _paymentRepository.GetPaymentsByUserIdAsync(userId);

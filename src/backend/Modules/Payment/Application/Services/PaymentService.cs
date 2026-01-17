@@ -31,15 +31,15 @@ public class PaymentService : IPaymentService
     {
         var userExists = await _userFacade.UserExistsAsync(command.UserId);
         if (!userExists)
-            throw new NotFoundException($"User {command.UserId} not found");
+            throw new NotFoundException($"Usuario {command.UserId} no encontrado");
 
         var cardBelongsToUser = await _cardFacade.CardBelongsToUserAsync(command.CardId, command.UserId);
         if (!cardBelongsToUser)
-            throw new DomainException("Card does not belong to user");
+            throw new DomainException("La tarjeta no pertenece al usuario");
 
         var hasSufficientBalance = await _cardFacade.HasSufficientBalanceAsync(command.CardId, command.Amount);
         if (!hasSufficientBalance)
-            throw new DomainException("Insufficient balance");
+            throw new DomainException("Saldo insuficiente");
 
         await _cardFacade.DebitCardAsync(command.CardId, command.Amount);
 

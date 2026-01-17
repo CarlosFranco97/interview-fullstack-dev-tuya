@@ -15,17 +15,14 @@ public class CardDto
 
 public class CreateCardRequest
 {
-    public Guid UserId { get; set; }
-    public required string CardNumber { get; set; }
     public required string HolderName { get; set; }
-    public DateTime ExpirationDate { get; set; }
     public decimal CreditLimit { get; set; }
 }
 
 public class UpdateCardRequest
 {
     public required string HolderName { get; set; }
-    public DateTime ExpirationDate { get; set; }
+    public decimal CreditLimit { get; set; }
 }
 
 public class CreditCardRequest

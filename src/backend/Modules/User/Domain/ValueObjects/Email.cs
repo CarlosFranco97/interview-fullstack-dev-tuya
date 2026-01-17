@@ -24,15 +24,15 @@ public sealed class Email : ValueObject
     public static Email Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new DomainException("Email cannot be empty");
+            throw new DomainException("El correo electrónico no puede estar vacío");
 
         var normalizedEmail = value.Trim().ToLower();
 
         if (normalizedEmail.Length > 100)
-            throw new DomainException("Email cannot exceed 100 characters");
+            throw new DomainException("El correo electrónico no puede exceder 100 caracteres");
 
         if (!EmailRegex.IsMatch(normalizedEmail))
-            throw new DomainException("Invalid email format");
+            throw new DomainException("Formato de correo electrónico inválido");
 
         return new Email(normalizedEmail);
     }

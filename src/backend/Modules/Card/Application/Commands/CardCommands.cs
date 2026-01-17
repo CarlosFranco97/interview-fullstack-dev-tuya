@@ -4,7 +4,7 @@ public record UpdateCardCommand
 {
     public Guid CardId { get; set; }
     public string HolderName { get; set; } = null!;
-    public DateTime ExpirationDate { get; set; }
+    public decimal CreditLimit { get; set; }
 }
 
 public record ActivateCardCommand

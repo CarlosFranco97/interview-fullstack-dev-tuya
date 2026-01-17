@@ -117,6 +117,18 @@ public class Card
         ExpirationDate = newDate;
     }
 
+    public void UpdateCreditLimit(Money newLimit)
+    {
+        if (newLimit.Amount <= 0)
+            throw new DomainException("El límite de crédito debe ser positivo");
+        if (newLimit.Amount > 300000)
+            throw new DomainException("El límite de crédito no puede exceder $300,000 COP");
+        
+        var usedCredit = GetUsedCredit();
+        _creditLimit = newLimit.Amount;
+        _balance = newLimit.Amount - usedCredit.Amount;
+    }
+
     public bool IsExpired() => DateTime.UtcNow > ExpirationDate;
 
     public bool CanProcessTransaction() => Status == CardStatus.Active && !IsExpired();

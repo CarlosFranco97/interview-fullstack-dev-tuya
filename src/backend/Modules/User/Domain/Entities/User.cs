@@ -25,13 +25,13 @@ public class User
     public User(string username, Email email, string passwordHash, string fullName)
     {
         if (string.IsNullOrWhiteSpace(username))
-            throw new DomainException("Username is required");
+            throw new DomainException("El nombre de usuario es requerido");
         if (email == null)
-            throw new DomainException("Email is required");
+            throw new DomainException("El correo electrónico es requerido");
         if (string.IsNullOrWhiteSpace(passwordHash))
-            throw new DomainException("Password hash is required");
+            throw new DomainException("El hash de contraseña es requerido");
         if (string.IsNullOrWhiteSpace(fullName))
-            throw new DomainException("Full name is required");
+            throw new DomainException("El nombre completo es requerido");
 
         Id = Guid.NewGuid();
         Username = username.ToLower();
@@ -45,14 +45,14 @@ public class User
     public void Deactivate()
     {
         if (!IsActive)
-            throw new DomainException("User is already inactive");
+            throw new DomainException("El usuario ya está inactivo");
         IsActive = false;
     }
 
     public void Activate()
     {
         if (IsActive)
-            throw new DomainException("User is already active");
+            throw new DomainException("El usuario ya está activo");
         IsActive = true;
     }
 

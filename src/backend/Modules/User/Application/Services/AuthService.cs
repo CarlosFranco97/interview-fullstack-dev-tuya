@@ -37,23 +37,18 @@ public class AuthService : IAuthService
 
     public async Task<Shared.Facades.UserDto> RegisterAsync(RegisterCommand command)
     {
-        // Validar
         await _registerValidator.ValidateAndThrowAsync(command);
 
-        // Verificar si usuario o email ya existen
         if (await _userRepository.UsernameExistsAsync(command.Username))
-            throw new DomainException("Username already exists");
+            throw new DomainException("El nombre de usuario ya existe");
 
         if (await _userRepository.EmailExistsAsync(command.Email))
-            throw new DomainException("Email already exists");
+            throw new DomainException("El correo electrónico ya existe");
 
-        // Hash password
         var passwordHash = BCrypt.HashPassword(command.Password);
 
-        // Crear email como Value Object
         var email = Email.Create(command.Email);
 
-        // Crear usuario
         var user = new Domain.Entities.User(
             command.Username,
             email,
@@ -68,23 +63,18 @@ public class AuthService : IAuthService
 
     public async Task<Shared.Facades.LoginResponse> LoginAsync(LoginCommand command)
     {
-        // Validar
         await _loginValidator.ValidateAndThrowAsync(command);
 
-        // Buscar usuario
         var user = await _userRepository.GetByUsernameAsync(command.Username);
         if (user == null)
-            throw new UnauthorizedException("Invalid username or password");
+            throw new UnauthorizedException("Datos ingrasados incorrectos, valide credenciales");
 
-        // Verificar password
         if (!BCrypt.Verify(command.Password, user.PasswordHash))
-            throw new UnauthorizedException("Invalid username or password");
+            throw new UnauthorizedException("Datos ingrasados incorrectos, valide credenciales");
 
-        // Verificar si está activo
         if (!user.IsActive)
-            throw new UnauthorizedException("User account is inactive");
+            throw new UnauthorizedException("La cuenta de usuario está inactiva");
 
-        // Generar token JWT
         var token = GenerateJwtToken(user);
 
         return new Shared.Facades.LoginResponse

@@ -13,7 +13,6 @@ public class PaymentEntity
     public DateTime PaymentDate { get; private set; }
     public PaymentStatus Status { get; private set; }
 
-    // Constructor para EF Core
     private PaymentEntity() 
     {
         Id = Guid.Empty;
@@ -21,31 +20,26 @@ public class PaymentEntity
         UserId = Guid.Empty;
     }
 
-    // Constructor con validaciones (Domain)
     public PaymentEntity(Guid cardId, Guid userId, decimal amount, string description)
     {
         if (cardId == Guid.Empty)
-            throw new DomainException("CardId cannot be empty");
+            throw new DomainException("El ID de la tarjeta no puede estar vacío");
         
         if (userId == Guid.Empty)
-            throw new DomainException("UserId cannot be empty");
+            throw new DomainException("El ID del usuario no puede estar vacío");
             
         if (amount <= 0)
-            throw new DomainException("Amount must be positive");
-            
-        if (string.IsNullOrWhiteSpace(description))
-            throw new DomainException("Description is required");
+            throw new DomainException("El monto debe ser positivo");
 
         Id = Guid.NewGuid();
         CardId = cardId;
         UserId = userId;
         Amount = amount;
-        Description = description;
+        Description = string.IsNullOrWhiteSpace(description) ? "Pago sin descripción" : description;
         PaymentDate = DateTime.UtcNow;
         Status = PaymentStatus.Pending;
     }
 
-    // Métodos del Domain
     public void MarkAsCompleted()
     {
         if (Status != PaymentStatus.Pending)
