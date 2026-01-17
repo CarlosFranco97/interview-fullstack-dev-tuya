@@ -93,8 +93,7 @@ public sealed class Money : ValueObject
         yield return Currency;
     }
 
-    public override string ToString() => $"{Amount:N2} {Currency}";
+    public override string ToString() => $"{Amount.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)} {Currency}";
 
-    // Implicit conversion for easier usage with EF Core
     public static implicit operator decimal(Money money) => money.Amount;
 }
